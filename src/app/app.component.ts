@@ -1,38 +1,17 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ConfirmEventType, MenuItem, TreeNode } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-
+import {MessageService} from 'primeng/api';
+import {PrimeIcons} from 'primeng/api';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styles: [
-    `
-      :host ::ng-deep .ui-slidemenu {
-        width: 13.5em;
-      }
-      :host ::ng-deep .p-button {
-        margin: 0 0.5rem 0 0;
-        min-width: 10rem;
-      }
-
-      p {
-        margin: 0;
-      }
-
-      .confirmation-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      :host ::ng-deep .p-dialog .p-button {
-        min-width: 6rem;
-      }
-    `,
-  ],
+  styleUrls: ['./app.component.scss'],
+  providers:[MessageService]
 })
 export class AppComponent {
-  constructor(private primengConfig: PrimeNGConfig) {}
+  // @ViewChild("chart") chart: UIChart;
+  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService) {}
 
   displayModal: boolean = false;
 
@@ -45,6 +24,9 @@ export class AppComponent {
   displayPosition: boolean = false;
 
   position: string = '';
+  //primeNG part
+  data1: TreeNode[] = [];
+  selectedNode: TreeNode | undefined;
 
   showModalDialog() {
     this.displayModal = true;
@@ -73,81 +55,38 @@ export class AppComponent {
   radioVal = { value: '' };
 
   recentNodeClicked: any;
-  flowTree = [{}];
 
-  topEmployee: any = {
-    id: 1,
-    name: '',
-    imageUrl:
-      'https://icons.iconarchive.com/icons/icojam/blue-bits/32/math-add-icon.png',
-    subordinates: [
-      // {
-      //   // name: 'East Coast Group',
-      //   // subordinates: [
-      //   //   {
-      //   //     name: 'Eastern Foreign',
-      //   //   },
-      //   //   {
-      //   //     name: 'Eastern Domestic',
-      //   //     subordinates: [{ name: 'Cleveland Chevy' }],
-      //   //   },
-      //   // ],
-      // },
-      // {
-      //   name: 'West Coast Group',
-      //   subordinates: [
-      //     {
-      //       name: 'Western Foreign',
-      //     },
-      //   ],
-      // },
-    ],
-  };
-  isClicked(topEmployee: any) {
-    console.log(topEmployee);
-    this.recentNodeClicked = topEmployee;
-    // this.openDialog();
+  isClicked(data1: any) {
+    console.log(data1);
+    this.recentNodeClicked = data1;
+    this.showBasicDialog();
   }
+
   sendEmail(email: string, message: string) {
-    let previousNode = this.recentNodeClicked;
-    console.log('I am active.');
-    console.log('Email: ' + email + ' Message: ' + message);
-    //append and sync the clicked node with the data from modal
-    let recentData = {
-      id: previousNode.id,
-      email: email,
-      message: message,
-    };
-    this.flowTree.push(recentData);
-    console.log(recentData);
-
-    //track the previous id and add subordinate to it.
-    previousNode.subordinates = [
-      ...previousNode.subordinates,
-      {
-        id: 2,
-        name: 'email',
-        imageUrl:
-          'https://icons.iconarchive.com/icons/icojam/blue-bits/32/math-add-icon.png',
-        subordinates: [],
-      },
-    ];
-    // this.topEmployee.subordinates = [...this.topEmployee.subordinates,previousNode.subordinates];
-    // this.topEmployee.subordinates = previousNode.subordinates;
   }
+
   whichRadioClicked(value: string) {
-    if (value == 'email') {
-      //email
-      this.isEmail = true;
-      this.recentNodeClicked.subordinates.push({
-        id: this.recentNodeClicked.id + 1,
-        name: value,
-        subordinates: [],
-      });
-    } else {
-      //sms
-      this.isEmail = false;
+
+    console.log(value);
+    //need to modify accordingly to prime ng
+    console.log("Recent node clicked: ")
+    console.log(this.recentNodeClicked);
+    if(value == "email"){
+      this.isEmail=true;
+      console.log(this.recentNodeClicked);
+      this.recentNodeClicked.node.children.push({
+        key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+        label: "Send Email",
+        parent: this.recentNodeClicked,
+        expanded: true,
+        children: []
+      })
     }
+    else{
+      this.isEmail=false;
+    }
+    console.log("Data 1: ")
+    console.log(this.data1);
   }
   endCalled(endEvent: any): void {
     if (endEvent.item['items'] == undefined) {
@@ -156,38 +95,68 @@ export class AppComponent {
     console.log('end');
     console.log(endEvent);
     let endNode = {
-      id: this.recentNodeClicked.id + 1,
-      name: 'End Node',
-      imageUrl:
-        'https://icons.iconarchive.com/icons/dakirby309/windows-8-metro/32/Other-Power-Shut-Down-Metro-icon.png',
-      subordinates: [],
+      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+      label: 'End Node',
+      parent: this.recentNodeClicked,
+      expanded: true,
+      children: [],
+      selectable: false
     };
-    this.recentNodeClicked.subordinates.push(endNode);
+    this.recentNodeClicked.node.children.push(endNode);
     //  document.getElementById("myModal").setAttribute("data-bs-dismiss","modal")
   }
   tabCalled(hello: any) {
     console.log(hello);
   }
   sendTwoMail(twoMailEvent: any) {
+    console.log("Send two mail called; ")
+    console.log(this.recentNodeClicked)
     if (twoMailEvent.item['items'] == undefined) {
       this.displayBasic = false;
     }
     let node1 = {
-      id: this.recentNodeClicked + 1,
-      name: `Group `,
-      imageUrl:
-        'https://icons.iconarchive.com/icons/graphicloads/100-flat-2/32/email-icon.png',
-      subordinates: [],
+      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+      label: `Group `,
+      children: [],
+      parent: this.recentNodeClicked,
+      expanded: true,
+      icon:PrimeIcons.PLUS
     };
     let node2 = {
-      id: node1.id + 1,
-      name: 'Group Two',
-      imageUrl:
-        'https://icons.iconarchive.com/icons/graphicloads/100-flat-2/32/email-icon.png',
-      subordinates: [],
+      key: (parseInt(node1.key) + 1).toString(),
+      label: `Group `,
+      children: [],
+      parent: this.recentNodeClicked,
+      expanded: true,
     };
-    this.recentNodeClicked.subordinates.push(node1);
-    this.recentNodeClicked.subordinates.push(node2);
+    this.recentNodeClicked.node.children.push(node1, node2);
+  }
+ removeByAttr = function(arr:any, attr: any, value: any){
+    var i = arr.length;
+    while(i--){
+       if( arr[i] 
+           && arr[i].hasOwnProperty(attr) 
+           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+           arr.splice(i,1);
+
+       }
+    }
+    return arr;
+}
+  deleteNode(deleteEvent: any){
+    // console.log("Inside delete node")
+    // console.log(this.recentNodeClicked);
+    const myParent = this.recentNodeClicked.node.parent.node.children
+    // console.log("My Parent is : ")
+    // console.log(myParent);
+    
+    const myId = this.recentNodeClicked.node.key
+    // console.log("My ID is : ")
+    // console.log(myId);
+    this.removeByAttr(myParent, 'key', myId);   
+    // console.log("Data one after deleting")
+    // console.log(this.data1)
   }
   ngOnInit() {
     this.primengConfig.ripple = true;
@@ -204,12 +173,20 @@ export class AppComponent {
               //event.originalEvent: Browser event
               //event.item: menuitem metadata
               this.sendTwoMail(event);
+              console.log(
+                "Send two mail : : "
+              )
               console.log(event);
             },
           },
           {
             label: 'Delete',
             icon: 'pi pi-fw pi-trash',
+            command: (event) => {
+              //event.originalEvent: Browser event
+              //event.item: menuitem metadata
+              this.deleteNode(event);
+            },
           },
           {
             separator: true,
@@ -253,6 +230,7 @@ export class AppComponent {
           {
             label: 'Delete',
             icon: 'pi pi-fw pi-user-minus',
+            
           },
           {
             label: 'Search',
@@ -288,5 +266,18 @@ export class AppComponent {
         },
       },
     ];
+    this.data1 = [{
+      key: '1',
+      label: '+',
+      expanded: true,
+      children:[],
+      styleClass: 'department-coo',
+  }];
+  
   }
+  onNodeSelect(event: any) {
+    console.log("Node is clicked.")
+    console.log(event);
+    this.messageService.add({severity: 'success', summary: 'Node Selected', detail: event.node.label});
+}
 }

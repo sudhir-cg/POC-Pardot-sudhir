@@ -8,7 +8,7 @@ import { OrgChartModule } from '@mondal/org-chart';
 import { SlideMenuModule } from 'primeng/slidemenu';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
-
+import {OrganizationChartModule} from 'primeng/organizationchart';
 import { ButtonModule } from 'primeng/button';
 
 @NgModule({
@@ -20,7 +20,8 @@ import { ButtonModule } from 'primeng/button';
     SlideMenuModule,
     OrgChartModule,
     RadioButtonModule,
-    ButtonModule
+    ButtonModule,
+    OrganizationChartModule
   ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ]

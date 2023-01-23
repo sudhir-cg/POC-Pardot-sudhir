@@ -1,10 +1,10 @@
-<mui-org-chart
+<!-- <mui-org-chart
   [topEmployee]="topEmployee"
   direction="vertical"
   (itemClick)="isClicked($event)"
   (click)="showBasicDialog()"
   data-bs-target="#staticBackdrop"
-></mui-org-chart>
+></mui-org-chart> -->
 
 <!-- prime ng dialog -->
 
@@ -73,3 +73,20 @@
   </ng-template> -->
 </p-dialog>
 <!-- ends here -->
+
+<h5>Advanced</h5>
+<p>Organization with advanced customization.</p>
+<p-organizationChart  [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="isClicked($event)"
+    styleClass="company">
+    <ng-template let-node pTemplate="person" styleClass="company">
+        <div class="node-header">{{node.label}}</div>
+        <!-- <img src="../assets/testEmail.png" alt=""> -->
+        <!-- <div class="node-content">
+            <div>{{node.data.name}}</div>
+        </div> -->
+        <i class={{node.icon}}></i>
+    </ng-template>
+    <!-- <ng-template let-node pTemplate="department">
+        {{node.label}}
+    </ng-template> -->
+</p-organizationChart>
