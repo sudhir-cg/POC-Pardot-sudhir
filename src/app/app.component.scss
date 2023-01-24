@@ -1,9 +1,23 @@
 :host ::ng-deep .p-organizationchart {
     .p-person {
         padding: 0;
-        border: 0 none;
+        border: rgb(37, 192, 71) solid 3px;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-right: 0.9rem;
+        padding-left: 0.9rem;
+        border-radius: 0.5rem;
+        
     }
-
+    .p-endNode{
+        padding: 0;
+        border: rgb(173, 58, 58) solid 3px;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-right: 0.9rem;
+        padding-left: 0.9rem;
+        border-radius: 0.5rem;
+    }
     .node-header, .node-content {
         padding: .5em .7rem;
     }
@@ -20,6 +34,10 @@
         border: 1px solid #495ebb;
     }
 
+    .peekBtn{
+        background-color: #a534b6;
+        padding: 0.5rem;
+    }
     .node-content img {
         border-radius: 50%;
     }
@@ -32,12 +50,14 @@
     .department-coo {
         padding: 0;
         background-color: #a534b6;
+        opacity: 0.8;
         color: #ffffff;
         border-radius: 15px;
     height: 3rem;
     width: 3rem;
     font-weight: bold;
     font-size: 1.6rem;
+    border: red solid 2px !important;
     }
 
     .department-cto {

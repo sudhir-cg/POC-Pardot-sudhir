@@ -79,7 +79,8 @@ export class AppComponent {
         label: "Send Email",
         parent: this.recentNodeClicked,
         expanded: true,
-        children: []
+        children: [],
+        styleClass: 'p-person',
       })
     }
     else{
@@ -100,7 +101,8 @@ export class AppComponent {
       parent: this.recentNodeClicked,
       expanded: true,
       children: [],
-      selectable: false
+      selectable: false,
+      styleClass: 'p-endNode',
     };
     this.recentNodeClicked.node.children.push(endNode);
     //  document.getElementById("myModal").setAttribute("data-bs-dismiss","modal")
@@ -116,18 +118,20 @@ export class AppComponent {
     }
     let node1 = {
       key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
-      label: `Group `,
+      label: `Double Email `,
       children: [],
       parent: this.recentNodeClicked,
       expanded: true,
-      icon:PrimeIcons.PLUS
+      icon:PrimeIcons.PLUS,
+      styleClass: 'p-person',
     };
     let node2 = {
       key: (parseInt(node1.key) + 1).toString(),
-      label: `Group `,
+      label: `Double Email`,
       children: [],
       parent: this.recentNodeClicked,
       expanded: true,
+      styleClass: 'p-person',
     };
     this.recentNodeClicked.node.children.push(node1, node2);
   }
@@ -244,6 +248,7 @@ export class AppComponent {
                     label: 'Print',
                     icon: 'pi pi-fw pi-print',
                     items: [],
+
                   },
                 ],
               },
@@ -271,7 +276,7 @@ export class AppComponent {
       label: '+',
       expanded: true,
       children:[],
-      styleClass: 'department-coo',
+      styleClass: 'p-person',
   }];
   
   }
