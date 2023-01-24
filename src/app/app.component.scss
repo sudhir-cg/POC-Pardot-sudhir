@@ -65,3 +65,20 @@
         color: #ffffff;
     }
 }
+
+// ::ng-deep .p-datepicker table td {
+//     padding: 0.13rem; // use as per your requirement.
+//   }
+::ng-deep p-calendar .ui-calendar .ui-inputtext {
+    // add style here
+    border: 1px solid red;
+  }
+  .p-dialog-content {
+    overflow-y: initial !important;
+  }
+  .p-calendar  {
+    top: 0 !important;
+  }
+  .p-datepicker {
+    top: 0 important ;
+  }

@@ -3,6 +3,7 @@ import { ConfirmEventType, MenuItem, TreeNode } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import {MessageService} from 'primeng/api';
 import {PrimeIcons} from 'primeng/api';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +12,7 @@ import {PrimeIcons} from 'primeng/api';
 })
 export class AppComponent {
   // @ViewChild("chart") chart: UIChart;
-  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService) {}
+  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService,private ref: ChangeDetectorRef) {}
 
   displayModal: boolean = false;
 
@@ -27,7 +28,11 @@ export class AppComponent {
   //primeNG part
   data1: TreeNode[] = [];
   selectedNode: TreeNode | undefined;
-
+  campaignName: string = "";
+  campaignDescription:string="";
+  startDate: Date|undefined;
+  endDate: Date|undefined;
+  flowOfTree:[{}] = [{}]
   showModalDialog() {
     this.displayModal = true;
   }
@@ -51,43 +56,70 @@ export class AppComponent {
 
   // -----//
   items: MenuItem[] = [];
-  isEmail: boolean = false;
+  isFirstNode: boolean = true;
   radioVal = { value: '' };
 
   recentNodeClicked: any;
 
   isClicked(data1: any) {
+    debugger
     console.log(data1);
     this.recentNodeClicked = data1;
-    this.showBasicDialog();
+    this.displayBasic = true;
   }
 
   sendEmail(email: string, message: string) {
   }
 
-  whichRadioClicked(value: string) {
+  campaignDescriptionSaveBtn() {
+    // console.log(this.campaignName);
+    // console.log(this.campaignDescription);
+    // console.log(this.startDate);
+    // console.log(this.endDate);
+    // console.log("Recent Node Clicked When Campaing Description Save is Clicked :  ");
+    // console.log(this.recentNodeClicked)
+    // //need to modify accordingly to prime ng
+    // console.log("Recent node clicked: ")
+    // console.log(this.recentNodeClicked);
 
-    console.log(value);
-    //need to modify accordingly to prime ng
-    console.log("Recent node clicked: ")
-    console.log(this.recentNodeClicked);
-    if(value == "email"){
-      this.isEmail=true;
-      console.log(this.recentNodeClicked);
-      this.recentNodeClicked.node.children.push({
-        key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
-        label: "Send Email",
-        parent: this.recentNodeClicked,
-        expanded: true,
-        children: [],
-        styleClass: 'p-person',
-      })
+    //add data to recent node clicked and format all the things accordingly
+    let firstNode = {
+      id: this.recentNodeClicked.node.key,
+      type: "firstNode",
+      data: {
+        campaignName: this.campaignName,
+        campaignDescription: this.campaignDescription,
+        recipiantList: "",
+        supressionList: "",
+        startDate: this.startDate,
+        endDate: this.endDate,
+      }
     }
-    else{
-      this.isEmail=false;
-    }
-    console.log("Data 1: ")
-    console.log(this.data1);
+    console.log("First Node: ")
+    console.log(firstNode);
+    this.flowOfTree.push(firstNode);
+
+    //now change the recent node clicked: 
+    this.recentNodeClicked.node.label = firstNode.data.campaignName;
+    //add one empty children too.
+    this.pushDefaultNewNode();
+    this.isFirstNode = false;
+    // if(value == "email"){
+    //   this.isFirstNode=false;
+    //   console.log(this.recentNodeClicked);
+    //   this.recentNodeClicked.node.children.push({
+    //     key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+    //     label: "Send Email",
+    //     parent: this.recentNodeClicked,
+    //     expanded: true,
+    //     children: [],
+    //     styleClass: 'p-person',
+    //   })
+    // }
+    // else{
+    //   this.isFirstNode=true;
+    // }
+    this.ref.detectChanges();
   }
   endCalled(endEvent: any): void {
     if (endEvent.item['items'] == undefined) {
@@ -110,31 +142,7 @@ export class AppComponent {
   tabCalled(hello: any) {
     console.log(hello);
   }
-  sendTwoMail(twoMailEvent: any) {
-    console.log("Send two mail called; ")
-    console.log(this.recentNodeClicked)
-    if (twoMailEvent.item['items'] == undefined) {
-      this.displayBasic = false;
-    }
-    let node1 = {
-      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
-      label: `Double Email `,
-      children: [],
-      parent: this.recentNodeClicked,
-      expanded: true,
-      icon:PrimeIcons.PLUS,
-      styleClass: 'p-person',
-    };
-    let node2 = {
-      key: (parseInt(node1.key) + 1).toString(),
-      label: `Double Email`,
-      children: [],
-      parent: this.recentNodeClicked,
-      expanded: true,
-      styleClass: 'p-person',
-    };
-    this.recentNodeClicked.node.children.push(node1, node2);
-  }
+
  removeByAttr = function(arr:any, attr: any, value: any){
     var i = arr.length;
     while(i--){
@@ -196,9 +204,30 @@ export class AppComponent {
             separator: true,
           },
           {
-            label: 'Export',
-            icon: 'pi pi-fw pi-external-link',
+            label: 'Send Email',
+            icon: 'pi-at',
+            items:[
+              {
+                label: 'Send By Quiq',
+                icon: 'pi pi-fw pi-external-link',
+                command: (event) => {
+                  //event.originalEvent: Browser event
+                  //event.item: menuitem metadata
+                  this.sendByQuiq(event);
+                },
+              },
+              {
+                label: 'Send By Twilio',
+                icon: 'pi pi-fw pi-external-link',
+                command: (event) => {
+                  //event.originalEvent: Browser event
+                  //event.item: menuitem metadata
+                  this.sendByTwilio(event);
+                },
+              },
+            ]
           },
+          
         ],
       },
       {
@@ -277,8 +306,61 @@ export class AppComponent {
       expanded: true,
       children:[],
       styleClass: 'p-person',
+      icon: "pi pi-times",
+      type:"startNode"
   }];
   
+  }
+  sendByTwilio(event: any) {
+    if (event.item['items'] == undefined) {
+      this.displayBasic = false;
+    }
+    //change node and label
+    this.recentNodeClicked.node.label = "Send By Twilio";
+    this.pushDefaultNewNode();
+  }
+  //service send message by Quiq
+  sendByQuiq(event: any) {
+    if (event.item['items'] == undefined) {
+      this.displayBasic = false;
+    }
+    //change node and label;
+    this.recentNodeClicked.node.label = "Send By Quiq";
+    this.pushDefaultNewNode();
+  }
+  sendTwoMail(twoMailEvent: any) {
+    console.log("Send two mail called; ")
+    console.log(this.recentNodeClicked)
+    if (twoMailEvent.item['items'] == undefined) {
+      this.displayBasic = false;
+    }
+    let node1 = {
+      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+      label: `Double Email `,
+      children: [],
+      parent: this.recentNodeClicked,
+      expanded: true,
+      icon:PrimeIcons.PLUS,
+      styleClass: 'p-person',
+    };
+    let node2 = {
+      key: (parseInt(node1.key) + 1).toString(),
+      label: `Double Email`,
+      children: [],
+      parent: this.recentNodeClicked,
+      expanded: true,
+      styleClass: 'p-person',
+    };
+    this.recentNodeClicked.node.children.push(node1, node2);
+  }
+  pushDefaultNewNode(){
+    this.recentNodeClicked.node.children.push({
+      key:( parseInt(this.recentNodeClicked.node.key)+1).toString(),
+      label:"Add New Task",
+      styleClass: 'p-person',
+      expanded: true,
+      children:[]
+    });
   }
   onNodeSelect(event: any) {
     console.log("Node is clicked.")

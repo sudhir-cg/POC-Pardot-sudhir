@@ -10,7 +10,9 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
 import {OrganizationChartModule} from 'primeng/organizationchart';
 import { ButtonModule } from 'primeng/button';
-
+import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {CalendarModule} from 'primeng/calendar';
 @NgModule({
   imports: [
     BrowserModule,
@@ -21,7 +23,10 @@ import { ButtonModule } from 'primeng/button';
     OrgChartModule,
     RadioButtonModule,
     ButtonModule,
-    OrganizationChartModule
+    OrganizationChartModule,
+    InputTextModule,
+    InputTextareaModule,
+    CalendarModule
   ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ]

@@ -6,16 +6,19 @@
   data-bs-target="#staticBackdrop"
 ></mui-org-chart> -->
 
-<!-- prime ng dialog -->
+<!-- prime ng dialog which opens at START NODE ONLY -->
 
 <p-dialog
-  *ngIf="!isEmail"
-  header="Header"
+  *ngIf="isFirstNode"
   [(visible)]="displayBasic"
-  [style]="{ width: 'auto' }"
-  [baseZIndex]="10000"
+  [style]="{ width: '50vh', height:'80vh'}"
+  [baseZIndex]="1000"
 >
-  <p-radioButton
+<ng-template pTemplate="header">
+  Campaign Description
+</ng-template>
+<!-- previous tempalte start -->
+  <!-- <p-radioButton
     name="groupname"
     [(ngModel)]="radioVal.value"
     value="email"
@@ -39,14 +42,53 @@
       (click)="displayBasic = false"
       label="No"
     ></p-button>
-  </ng-template>
+
+  </ng-template> -->
+<!-- previous template end -->
+<ng-template pTemplate="dialog-content" style="overflow-y: visible;">
+  <span class="p-float-label pt-9">
+    <input type="text" pInputText [(ngModel)]="campaignName"  id="campaignNameInput" class="col-12"> 
+    <label for="campaignNameInput">Campaign Name</label>
+    </span>
+    
+      <div class="p-float-label mt-4">
+        <textarea rows="5" cols="22" pInputTextarea [autoResize]="true" [(ngModel)]="campaignDescription" id="campaignDescriptionInput" style="min-height: 150px;" class="col-12"></textarea>
+        <label for="campaignDescriptionInput">Campaign Description</label>
+      </div>
+    
+    
+    
+    
+    <h5>Recipient List</h5>
+    <h5>Supression List</h5>
+    
+    <p-calendar [(ngModel)]="startDate"  [showTime]="true" [showSeconds]="true" inputId="time" [showIcon]="true" [styleClass]="'width:10vh; border: 20px solid red;'"></p-calendar>
+
+    
+    
+    <div class="field col-12 mt-4"> 
+      <p-calendar [(ngModel)]="endDate" [showTime]="true" [showSeconds]="true" inputId="time" [showIcon]="true"  ></p-calendar>
+    </div>
+</ng-template>
+    
+    <!-- Footer of dialouge -->
+    <ng-template pTemplate="footer">
+      <p-button
+        icon="pi pi-check"
+        (click)="displayBasic = false; campaignDescriptionSaveBtn()"
+        label="Save"
+        styleClass="p-button-text"
+      ></p-button>
+    
+    </ng-template>
+
 </p-dialog>
 <!-- ends here -->
 
 <!-- modal for slide menu -->
 
 <p-dialog
-  *ngIf="isEmail"
+  *ngIf="!isFirstNode"
   [(visible)]="displayBasic"
   [style]="{ width: 'auto', height: 'auto' }"
   [baseZIndex]="10000"
@@ -74,12 +116,16 @@
 </p-dialog>
 <!-- ends here -->
 
-<h5>Advanced</h5>
-<p>Organization with advanced customization.</p>
 <p-organizationChart  [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="isClicked($event)"
     styleClass="company">
-    <ng-template let-node pTemplate="person">
-      <div class="node-header">{{ node.label }}</div>
+    <!-- in order to style specific node pTemplate should be given name 
+      provided in TYPE of that node in object -->
+
+
+    <!-- <ng-template let-node pTemplate="startNode">
+      <div class="node-header"></div>
+        <i></i>
       <div class="node-content"></div>
-    </ng-template>
+    </ng-template> -->
+
 </p-organizationChart>
