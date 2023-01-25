@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ConfirmEventType, MenuItem, TreeNode } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-import {MessageService} from 'primeng/api';
-import {PrimeIcons} from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { PrimeIcons } from 'primeng/api';
 import { ChangeDetectorRef } from '@angular/core';
 import { UIChart } from 'primeng/chart/public_api';
 import { DbService } from './db.service';
@@ -11,15 +17,23 @@ import { DbService } from './db.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers:[MessageService],
+  providers: [MessageService],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AppComponent implements OnInit{
-  @ViewChild("chart")
+export class AppComponent implements OnInit {
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
+  @ViewChild('chart')
   chart!: UIChart;
   savedQueries: any;
   selectedQuery: any;
-  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService,private ref: ChangeDetectorRef, private dbService: DbService) {}
+  constructor(
+    private primengConfig: PrimeNGConfig,
+    private messageService: MessageService,
+    private ref: ChangeDetectorRef,
+    private dbService: DbService
+  ) {}
 
   displayModal: boolean = false;
 
@@ -33,21 +47,23 @@ export class AppComponent implements OnInit{
 
   position: string = '';
   //primeNG part
-  data1 = [{
-    key: '1',
-    label: '+',
-    expanded: true,
-    children:[],
-    styleClass: 'p-person',
-    icon: "pi pi-times",
-    type:"startNode"
-}];
+  data1 = [
+    {
+      key: '1',
+      label: '+',
+      expanded: true,
+      children: [],
+      styleClass: 'p-person',
+      icon: 'pi pi-times',
+      type: 'startNode',
+    },
+  ];
   selectedNode: TreeNode | undefined;
-  campaignName: string = "";
-  campaignDescription:string="";
-  startDate: Date|undefined;
-  endDate: Date|undefined;
-  flowOfTree:[{}] = [{}]
+  campaignName: string = '';
+  campaignDescription: string = '';
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  flowOfTree: [{}] = [{}];
   showModalDialog() {
     this.displayModal = true;
   }
@@ -77,15 +93,14 @@ export class AppComponent implements OnInit{
   recentNodeClicked: any;
 
   isClicked(data1: any, chart: any) {
-
     console.log(data1);
     this.recentNodeClicked = data1;
     this.displayBasic = true;
     this.chart = chart;
+    this.selectedNode = undefined;
   }
 
-  sendEmail(email: string, message: string) {
-  }
+  sendEmail(email: string, message: string) {}
 
   campaignDescriptionSaveBtn() {
     // console.log(this.campaignName);
@@ -101,21 +116,21 @@ export class AppComponent implements OnInit{
     //add data to recent node clicked and format all the things accordingly
     let firstNode = {
       id: this.recentNodeClicked.node.key,
-      type: "firstNode",
+      type: 'firstNode',
       data: {
         campaignName: this.campaignName,
         campaignDescription: this.campaignDescription,
-        recipiantList: "",
-        supressionList: "",
+        recipiantList: '',
+        supressionList: '',
         startDate: this.startDate,
         endDate: this.endDate,
-      }
-    }
-    console.log("First Node: ")
+      },
+    };
+    console.log('First Node: ');
     console.log(firstNode);
     this.flowOfTree.push(firstNode);
 
-    //now change the recent node clicked: 
+    //now change the recent node clicked:
     this.recentNodeClicked.node.label = firstNode.data.campaignName;
     this.recentNodeClicked.node.type = firstNode.type;
     //add one empty children too.
@@ -137,17 +152,15 @@ export class AppComponent implements OnInit{
     //   this.isFirstNode=true;
     // }
     this.ref.detectChanges();
-    console.log("Data 1");
+    console.log('Data 1');
     console.log(this.data1);
     // this.selectedNode = this.recentNodeClicked.node.children[0];
     this.selectedNode = undefined;
-
   }
-  unSelect(event: any){
+  unSelect(event: any) {
     // console.log("Unselected")
     // let newData = {...this.data1};
     // this.data1 = {...newData}
-
   }
   endCalled(endEvent: any): void {
     if (endEvent.item['items'] == undefined) {
@@ -165,36 +178,38 @@ export class AppComponent implements OnInit{
       styleClass: 'p-endNode',
     };
     this.recentNodeClicked.node.children.push(endNode);
+    this.selectedNode = undefined;
     //  document.getElementById("myModal").setAttribute("data-bs-dismiss","modal")
   }
   tabCalled(hello: any) {
     console.log(hello);
   }
 
- removeByAttr = function(arr:any, attr: any, value: any){
+  removeByAttr = function (arr: any, attr: any, value: any) {
     var i = arr.length;
-    while(i--){
-       if( arr[i] 
-           && arr[i].hasOwnProperty(attr) 
-           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
-
-           arr.splice(i,1);
-
-       }
+    while (i--) {
+      if (
+        arr[i] &&
+        arr[i].hasOwnProperty(attr) &&
+        arguments.length > 2 &&
+        arr[i][attr] === value
+      ) {
+        arr.splice(i, 1);
+      }
     }
     return arr;
-}
-  deleteNode(deleteEvent: any){
+  };
+  deleteNode(deleteEvent: any) {
     // console.log("Inside delete node")
     // console.log(this.recentNodeClicked);
-    const myParent = this.recentNodeClicked.node.parent.node.children
+    const myParent = this.recentNodeClicked.node.parent.node.children;
     // console.log("My Parent is : ")
     // console.log(myParent);
-    
-    const myId = this.recentNodeClicked.node.key
+
+    const myId = this.recentNodeClicked.node.key;
     // console.log("My ID is : ")
     // console.log(myId);
-    this.removeByAttr(myParent, 'key', myId);   
+    this.removeByAttr(myParent, 'key', myId);
     // console.log("Data one after deleting")
     // console.log(this.data1)
   }
@@ -213,10 +228,9 @@ export class AppComponent implements OnInit{
               //event.originalEvent: Browser event
               //event.item: menuitem metadata
               this.sendTwoMail(event);
-              console.log(
-                "Send two mail : : "
-              )
+              console.log('Send two mail : : ');
               console.log(event);
+              this.selectedNode = undefined;
             },
           },
           {
@@ -234,7 +248,7 @@ export class AppComponent implements OnInit{
           {
             label: 'Send Email',
             icon: 'pi-at',
-            items:[
+            items: [
               {
                 label: 'Send By Quiq',
                 icon: 'pi pi-fw pi-external-link',
@@ -242,6 +256,7 @@ export class AppComponent implements OnInit{
                   //event.originalEvent: Browser event
                   //event.item: menuitem metadata
                   this.sendByQuiq(event);
+                  this.selectedNode = undefined;
                 },
               },
               {
@@ -251,11 +266,11 @@ export class AppComponent implements OnInit{
                   //event.originalEvent: Browser event
                   //event.item: menuitem metadata
                   this.sendByTwilio(event);
+                  this.selectedNode = undefined;
                 },
               },
-            ]
+            ],
           },
-          
         ],
       },
       {
@@ -291,7 +306,6 @@ export class AppComponent implements OnInit{
           {
             label: 'Delete',
             icon: 'pi pi-fw pi-user-minus',
-            
           },
           {
             label: 'Search',
@@ -305,7 +319,6 @@ export class AppComponent implements OnInit{
                     label: 'Print',
                     icon: 'pi pi-fw pi-print',
                     items: [],
-
                   },
                 ],
               },
@@ -325,23 +338,24 @@ export class AppComponent implements OnInit{
           //event.originalEvent: Browser event
           //event.item: menuitem metadata
           this.endCalled(event);
+          this.selectedNode = undefined;
         },
       },
     ];
-    
-    this.dbService.runStoredProcedure().subscribe((res)=>{
+
+    this.dbService.runStoredProcedure().subscribe((res) => {
       this.savedQueries = res;
       console.log(this.savedQueries);
-    })
-    
+    });
   }
   sendByTwilio(event: any) {
     if (event.item['items'] == undefined) {
       this.displayBasic = false;
     }
     //change node and label
-    this.recentNodeClicked.node.label = "Send By Twilio";
+    this.recentNodeClicked.node.label = 'Send By Twilio';
     this.pushDefaultNewNode();
+    this.selectedNode = undefined;
   }
   //service send message by Quiq
   sendByQuiq(event: any) {
@@ -349,12 +363,13 @@ export class AppComponent implements OnInit{
       this.displayBasic = false;
     }
     //change node and label;
-    this.recentNodeClicked.node.label = "Send By Quiq";
+    this.recentNodeClicked.node.label = 'Send By Quiq';
     this.pushDefaultNewNode();
+    this.selectedNode = undefined;
   }
   sendTwoMail(twoMailEvent: any) {
-    console.log("Send two mail called; ")
-    console.log(this.recentNodeClicked)
+    console.log('Send two mail called; ');
+    console.log(this.recentNodeClicked);
     if (twoMailEvent.item['items'] == undefined) {
       this.displayBasic = false;
     }
@@ -364,7 +379,7 @@ export class AppComponent implements OnInit{
       children: [],
       parent: this.recentNodeClicked,
       expanded: true,
-      icon:PrimeIcons.PLUS,
+      icon: PrimeIcons.PLUS,
       styleClass: 'p-person',
     };
     let node2 = {
@@ -376,19 +391,26 @@ export class AppComponent implements OnInit{
       styleClass: 'p-person',
     };
     this.recentNodeClicked.node.children.push(node1, node2);
+    this.selectedNode = undefined;
   }
-  pushDefaultNewNode(){
+  pushDefaultNewNode() {
     this.recentNodeClicked.node.children.push({
-      key:( parseInt(this.recentNodeClicked.node.key)+1).toString(),
-      label:"Add New Task",
+      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+      label: 'Add New Task',
       styleClass: 'p-person',
       expanded: true,
-      children:[]
+      children: [],
     });
+    this.selectedNode = undefined;
   }
   onNodeSelect(event: any) {
-    console.log("Node is clicked.")
+    console.log('Node is clicked.');
     console.log(event);
-    this.messageService.add({severity: 'success', summary: 'Node Selected', detail: event.node.label});
-}
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Node Selected',
+      detail: event.node.label,
+    });
+    this.selectedNode = undefined;
+  }
 }
