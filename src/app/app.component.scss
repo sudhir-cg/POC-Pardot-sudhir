@@ -1,11 +1,11 @@
 :host ::ng-deep .p-organizationchart {
   .p-person {
-    padding: 0;
+    padding: 0.5rem;
     border: rgb(37, 192, 71) solid 3px;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-right: 0.9rem;
-    padding-left: 0.9rem;
+    // padding-top: 0.5rem;
+    // padding-bottom: 0.5rem;
+    // padding-right: 0.9rem;
+    // padding-left: 0.9rem;
     border-radius: 0.5rem;
   }
   .p-endNode {
@@ -47,7 +47,6 @@
   }
   .node-content {
     text-align: center;
-    border: 1px solid #495ebb;
   }
 
   .peekBtn {
