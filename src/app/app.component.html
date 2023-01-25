@@ -87,23 +87,25 @@
       <label for="campaignDescriptionInput">Campaign Description</label>
     </div>
 
-    <div class="pt-1">
-      <label for="campaignNameInput" class=""><h5>Recipient List</h5></label>
+    <div class="pt-4">
+      <!-- <label for="campaignNameInput" class=""><h5>Recipient List</h5></label> -->
       <p-dropdown
         [options]="savedQueries"
         [(ngModel)]="selectedQuery"
         optionLabel="name"
         class="col-12"
+        placeholder="Recipient List"
         [style]="{ width: '100%', height: 'auto' }"
       ></p-dropdown>
     </div>
 
-    <div class="pt-2">
-      <label for="campaignNameInput" class=""><h5>Supression List</h5></label>
+    <div class="pt-2 pb-4">
+      <!-- <label for="campaignNameInput" class=""><h5>Supression List</h5></label> -->
       <p-dropdown
         [options]="savedQueries"
         [(ngModel)]="selectedQuery"
         optionLabel="name"
+        placeholder="Supression List"
         class="col-12"
         [style]="{ width: '100%', height: 'auto' }"
       ></p-dropdown>
@@ -118,7 +120,7 @@
       [style]="{ width: 'auto', height: 'auto' }"
     ></p-calendar> -->
     <div class="pt-2">
-      <label for="campaignNameInput" class=""><h5>Day Start</h5></label>
+      <!-- <label for="campaignNameInput" class=""><h5>Day Start</h5></label> -->
       <p-calendar
         appendTo="body"
         [(ngModel)]="startDate"
@@ -130,8 +132,9 @@
     </div>
 
     <div class="pt-2">
-      <label for="campaignNameInput" class=""><h5>Day End</h5></label>
+      <!-- <label for="campaignNameInput" class=""><h5>Day End</h5></label> -->
       <p-calendar
+        class="mt-4"
         appendTo="body"
         [(ngModel)]="endDate"
         [showTime]="true"
@@ -153,7 +156,7 @@
   </ng-template>
 
   <!-- Footer of dialouge -->
-  <ng-template pTemplate="footer">
+  <ng-template pTemplate="footer" class="text-align-center">
     <button
       pButton
       pRipple
@@ -211,7 +214,7 @@
 
   <ng-template let-node pTemplate="startNode">
     <div class="node-header"></div>
-    <i></i>
+
     <div class="node-content"></div>
   </ng-template>
 </p-organizationChart>

@@ -97,6 +97,7 @@ export class AppComponent implements OnInit {
     this.recentNodeClicked = data1;
     this.displayBasic = true;
     this.chart = chart;
+    this.selectedNode = undefined;
   }
 
   sendEmail(email: string, message: string) {}
@@ -177,6 +178,7 @@ export class AppComponent implements OnInit {
       styleClass: 'p-endNode',
     };
     this.recentNodeClicked.node.children.push(endNode);
+    this.selectedNode = undefined;
     //  document.getElementById("myModal").setAttribute("data-bs-dismiss","modal")
   }
   tabCalled(hello: any) {
@@ -228,6 +230,7 @@ export class AppComponent implements OnInit {
               this.sendTwoMail(event);
               console.log('Send two mail : : ');
               console.log(event);
+              this.selectedNode = undefined;
             },
           },
           {
@@ -253,6 +256,7 @@ export class AppComponent implements OnInit {
                   //event.originalEvent: Browser event
                   //event.item: menuitem metadata
                   this.sendByQuiq(event);
+                  this.selectedNode = undefined;
                 },
               },
               {
@@ -262,6 +266,7 @@ export class AppComponent implements OnInit {
                   //event.originalEvent: Browser event
                   //event.item: menuitem metadata
                   this.sendByTwilio(event);
+                  this.selectedNode = undefined;
                 },
               },
             ],
@@ -333,6 +338,7 @@ export class AppComponent implements OnInit {
           //event.originalEvent: Browser event
           //event.item: menuitem metadata
           this.endCalled(event);
+          this.selectedNode = undefined;
         },
       },
     ];
@@ -349,6 +355,7 @@ export class AppComponent implements OnInit {
     //change node and label
     this.recentNodeClicked.node.label = 'Send By Twilio';
     this.pushDefaultNewNode();
+    this.selectedNode = undefined;
   }
   //service send message by Quiq
   sendByQuiq(event: any) {
@@ -358,6 +365,7 @@ export class AppComponent implements OnInit {
     //change node and label;
     this.recentNodeClicked.node.label = 'Send By Quiq';
     this.pushDefaultNewNode();
+    this.selectedNode = undefined;
   }
   sendTwoMail(twoMailEvent: any) {
     console.log('Send two mail called; ');
@@ -383,6 +391,7 @@ export class AppComponent implements OnInit {
       styleClass: 'p-person',
     };
     this.recentNodeClicked.node.children.push(node1, node2);
+    this.selectedNode = undefined;
   }
   pushDefaultNewNode() {
     this.recentNodeClicked.node.children.push({
@@ -392,6 +401,7 @@ export class AppComponent implements OnInit {
       expanded: true,
       children: [],
     });
+    this.selectedNode = undefined;
   }
   onNodeSelect(event: any) {
     console.log('Node is clicked.');
@@ -401,5 +411,6 @@ export class AppComponent implements OnInit {
       summary: 'Node Selected',
       detail: event.node.label,
     });
+    this.selectedNode = undefined;
   }
 }
