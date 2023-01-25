@@ -60,6 +60,7 @@
     
     
     <h5>Recipient List</h5>
+    <p-dropdown [options]="savedQueries" [(ngModel)]="selectedQuery" optionLabel="name" class="col-12"></p-dropdown>
     <h5>Supression List</h5>
     
     <p-calendar [(ngModel)]="startDate"  [showTime]="true" [showSeconds]="true" inputId="time" [showIcon]="true" [styleClass]="'width:10vh; border: 20px solid red;'"></p-calendar>
@@ -116,16 +117,16 @@
 </p-dialog>
 <!-- ends here -->
 
-<p-organizationChart  [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="isClicked($event)"
-    styleClass="company">
+<p-organizationChart #chart [value]="data1" selectionMode="single" [(selection)]="selectedNode" (onNodeSelect)="isClicked($event, chart)"(onNodeUnselect)="unSelect($event)"
+    >
     <!-- in order to style specific node pTemplate should be given name 
       provided in TYPE of that node in object -->
 
 
-    <!-- <ng-template let-node pTemplate="startNode">
+    <ng-template let-node pTemplate="startNode">
       <div class="node-header"></div>
         <i></i>
       <div class="node-content"></div>
-    </ng-template> -->
+    </ng-template>
 
 </p-organizationChart>

@@ -1,18 +1,25 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConfirmEventType, MenuItem, TreeNode } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import {MessageService} from 'primeng/api';
 import {PrimeIcons} from 'primeng/api';
 import { ChangeDetectorRef } from '@angular/core';
+import { UIChart } from 'primeng/chart/public_api';
+import { DbService } from './db.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers:[MessageService]
+  providers:[MessageService],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AppComponent {
-  // @ViewChild("chart") chart: UIChart;
-  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService,private ref: ChangeDetectorRef) {}
+export class AppComponent implements OnInit{
+  @ViewChild("chart")
+  chart!: UIChart;
+  savedQueries: any;
+  selectedQuery: any;
+  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService,private ref: ChangeDetectorRef, private dbService: DbService) {}
 
   displayModal: boolean = false;
 
@@ -26,7 +33,15 @@ export class AppComponent {
 
   position: string = '';
   //primeNG part
-  data1: TreeNode[] = [];
+  data1 = [{
+    key: '1',
+    label: '+',
+    expanded: true,
+    children:[],
+    styleClass: 'p-person',
+    icon: "pi pi-times",
+    type:"startNode"
+}];
   selectedNode: TreeNode | undefined;
   campaignName: string = "";
   campaignDescription:string="";
@@ -61,11 +76,12 @@ export class AppComponent {
 
   recentNodeClicked: any;
 
-  isClicked(data1: any) {
-    debugger
+  isClicked(data1: any, chart: any) {
+
     console.log(data1);
     this.recentNodeClicked = data1;
     this.displayBasic = true;
+    this.chart = chart;
   }
 
   sendEmail(email: string, message: string) {
@@ -101,6 +117,7 @@ export class AppComponent {
 
     //now change the recent node clicked: 
     this.recentNodeClicked.node.label = firstNode.data.campaignName;
+    this.recentNodeClicked.node.type = firstNode.type;
     //add one empty children too.
     this.pushDefaultNewNode();
     this.isFirstNode = false;
@@ -116,10 +133,21 @@ export class AppComponent {
     //     styleClass: 'p-person',
     //   })
     // }
-    // else{
+    // else{de
     //   this.isFirstNode=true;
     // }
     this.ref.detectChanges();
+    console.log("Data 1");
+    console.log(this.data1);
+    // this.selectedNode = this.recentNodeClicked.node.children[0];
+    this.selectedNode = undefined;
+
+  }
+  unSelect(event: any){
+    // console.log("Unselected")
+    // let newData = {...this.data1};
+    // this.data1 = {...newData}
+
   }
   endCalled(endEvent: any): void {
     if (endEvent.item['items'] == undefined) {
@@ -300,16 +328,12 @@ export class AppComponent {
         },
       },
     ];
-    this.data1 = [{
-      key: '1',
-      label: '+',
-      expanded: true,
-      children:[],
-      styleClass: 'p-person',
-      icon: "pi pi-times",
-      type:"startNode"
-  }];
-  
+    
+    this.dbService.runStoredProcedure().subscribe((res)=>{
+      this.savedQueries = res;
+      console.log(this.savedQueries);
+    })
+    
   }
   sendByTwilio(event: any) {
     if (event.item['items'] == undefined) {

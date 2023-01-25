@@ -13,6 +13,9 @@ import { ButtonModule } from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {CalendarModule} from 'primeng/calendar';
+import {ChartModule} from 'primeng/chart';
+import {DropdownModule} from 'primeng/dropdown';
+import { HttpClientModule } from "@angular/common/http";
 @NgModule({
   imports: [
     BrowserModule,
@@ -26,7 +29,10 @@ import {CalendarModule} from 'primeng/calendar';
     OrganizationChartModule,
     InputTextModule,
     InputTextareaModule,
-    CalendarModule
+    CalendarModule,
+    ChartModule,
+    DropdownModule,
+    HttpClientModule
   ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ]
