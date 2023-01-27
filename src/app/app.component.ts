@@ -134,7 +134,7 @@ export class AppComponent implements OnInit {
     this.recentNodeClicked.node.label = firstNode.data.campaignName;
     this.recentNodeClicked.node.type = firstNode.type;
     //add one empty children too.
-    this.pushDefaultNewNode();
+    this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
     this.isFirstNode = false;
     // if(value == "email"){
     //   this.isFirstNode=false;
@@ -212,6 +212,7 @@ export class AppComponent implements OnInit {
     this.removeByAttr(myParent, 'key', myId);
     // console.log("Data one after deleting")
     // console.log(this.data1)
+    this.selectedNode = undefined;
   }
   ngOnInit() {
     this.primengConfig.ripple = true;
@@ -219,7 +220,8 @@ export class AppComponent implements OnInit {
     this.items = [
       {
         label: 'Action',
-        icon: 'pi pi-fw pi-file',
+        icon: 'pi pi-fw pi-bolt',
+        styleClass: 'p-bolt',
         items: [
           {
             label: 'Send Mail to Two Groups',
@@ -237,6 +239,9 @@ export class AppComponent implements OnInit {
             label: 'Delete',
             icon: 'pi pi-fw pi-trash',
             command: (event) => {
+              if (event.item['items'] == undefined) {
+                this.displayBasic = false;
+              }
               //event.originalEvent: Browser event
               //event.item: menuitem metadata
               this.deleteNode(event);
@@ -247,7 +252,7 @@ export class AppComponent implements OnInit {
           },
           {
             label: 'Send Email',
-            icon: 'pi-at',
+            icon: 'pi pi-fw pi-send',
             items: [
               {
                 label: 'Send By Quiq',
@@ -261,7 +266,7 @@ export class AppComponent implements OnInit {
               },
               {
                 label: 'Send By Twilio',
-                icon: 'pi pi-fw pi-external-link',
+                icon: 'pi pi-fw pi-play',
                 command: (event) => {
                   //event.originalEvent: Browser event
                   //event.item: menuitem metadata
@@ -354,7 +359,8 @@ export class AppComponent implements OnInit {
     }
     //change node and label
     this.recentNodeClicked.node.label = 'Send By Twilio';
-    this.pushDefaultNewNode();
+    this.recentNodeClicked.node.styleClass = 'p-twilio';
+    this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
     this.selectedNode = undefined;
   }
   //service send message by Quiq
@@ -364,7 +370,8 @@ export class AppComponent implements OnInit {
     }
     //change node and label;
     this.recentNodeClicked.node.label = 'Send By Quiq';
-    this.pushDefaultNewNode();
+    this.recentNodeClicked.node.styleClass = 'p-quiq';
+    this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
     this.selectedNode = undefined;
   }
   sendTwoMail(twoMailEvent: any) {
@@ -393,11 +400,11 @@ export class AppComponent implements OnInit {
     this.recentNodeClicked.node.children.push(node1, node2);
     this.selectedNode = undefined;
   }
-  pushDefaultNewNode() {
+  pushDefaultNewNode(stylClass: string) {
     this.recentNodeClicked.node.children.push({
       key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
       label: 'Add New Task',
-      styleClass: 'p-person',
+      styleClass: `${stylClass}`,
       expanded: true,
       children: [],
     });
