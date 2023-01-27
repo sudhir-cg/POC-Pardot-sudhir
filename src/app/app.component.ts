@@ -10,9 +10,13 @@ import { PrimeNGConfig } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { PrimeIcons } from 'primeng/api';
 import { ChangeDetectorRef } from '@angular/core';
-import { UIChart } from 'primeng/chart/public_api';
 import { DbService } from './db.service';
+import { v4 as uuidv4 } from 'uuid';
 
+interface DefaultNodeParameters{
+  label?: string,
+  stylClass?: string
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,9 +28,8 @@ export class AppComponent implements OnInit {
   title(title: any) {
     throw new Error('Method not implemented.');
   }
-  @ViewChild('chart')
-  chart!: UIChart;
-  savedQueries: any;
+
+  savedQueries: {}[] = [];
   selectedQuery: any;
   constructor(
     private primengConfig: PrimeNGConfig,
@@ -49,7 +52,7 @@ export class AppComponent implements OnInit {
   //primeNG part
   data1 = [
     {
-      key: '1',
+      key: uuidv4(),
       label: '+',
       expanded: true,
       children: [],
@@ -96,7 +99,6 @@ export class AppComponent implements OnInit {
     console.log(data1);
     this.recentNodeClicked = data1;
     this.displayBasic = true;
-    this.chart = chart;
     this.selectedNode = undefined;
   }
 
@@ -116,7 +118,9 @@ export class AppComponent implements OnInit {
     //add data to recent node clicked and format all the things accordingly
     let firstNode = {
       id: this.recentNodeClicked.node.key,
-      type: 'firstNode',
+      type: 'campaignNode',
+      parent: '0',
+      children:[],
       data: {
         campaignName: this.campaignName,
         campaignDescription: this.campaignDescription,
@@ -131,10 +135,11 @@ export class AppComponent implements OnInit {
     this.flowOfTree.push(firstNode);
 
     //now change the recent node clicked:
-    this.recentNodeClicked.node.label = firstNode.data.campaignName;
-    this.recentNodeClicked.node.type = firstNode.type;
+    this.recentNodeClicked.node.label = this.campaignName;
+    this.recentNodeClicked.node.type = 'campaignNode';
+    this.recentNodeClicked.node.data = firstNode.data;
     //add one empty children too.
-    this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
+    this.pushDefaultNewNode({stylClass: this.recentNodeClicked.node.styleClass}); //this need to be fixed......
     this.isFirstNode = false;
     // if(value == "email"){
     //   this.isFirstNode=false;
@@ -169,9 +174,9 @@ export class AppComponent implements OnInit {
     console.log('end');
     console.log(endEvent);
     let endNode = {
-      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+      key: uuidv4(),
       label: 'End Node',
-      parent: this.recentNodeClicked,
+      parent: this.recentNodeClicked.node.key,
       expanded: true,
       children: [],
       selectable: false,
@@ -213,6 +218,7 @@ export class AppComponent implements OnInit {
     // console.log("Data one after deleting")
     // console.log(this.data1)
     this.selectedNode = undefined;
+    
   }
   ngOnInit() {
     this.primengConfig.ripple = true;
@@ -224,13 +230,13 @@ export class AppComponent implements OnInit {
         styleClass: 'p-bolt',
         items: [
           {
-            label: 'Send Mail to Two Groups',
+            label: 'Send Email and SMS',
             icon: 'pi pi-fw pi-plus',
             command: (event) => {
               //event.originalEvent: Browser event
               //event.item: menuitem metadata
-              this.sendTwoMail(event);
-              console.log('Send two mail : : ');
+              this.sendEmailAndSMS(event);
+              console.log('Send Email and SMS : : ');
               console.log(event);
               this.selectedNode = undefined;
             },
@@ -349,7 +355,19 @@ export class AppComponent implements OnInit {
     ];
 
     this.dbService.runStoredProcedure().subscribe((res) => {
-      this.savedQueries = res;
+      console.log(res);
+      for (let index = 0; index < res.length; index++) {
+        // const element = res[index];
+        // console.log("Element: ")
+        // console.log(element);
+        this.savedQueries.push(
+          {
+            name:  res[index].queryName,
+            code:  res[index].query
+          }
+        )
+        
+      }
       console.log(this.savedQueries);
     });
   }
@@ -374,39 +392,49 @@ export class AppComponent implements OnInit {
     this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
     this.selectedNode = undefined;
   }
-  sendTwoMail(twoMailEvent: any) {
+  sendEmailAndSMS(twoMailEvent: any) {
     console.log('Send two mail called; ');
     console.log(this.recentNodeClicked);
     if (twoMailEvent.item['items'] == undefined) {
       this.displayBasic = false;
     }
-    let node1 = {
-      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
-      label: `Double Email `,
-      children: [],
-      parent: this.recentNodeClicked,
-      expanded: true,
-      icon: PrimeIcons.PLUS,
-      styleClass: 'p-person',
-    };
-    let node2 = {
-      key: (parseInt(node1.key) + 1).toString(),
-      label: `Double Email`,
-      children: [],
-      parent: this.recentNodeClicked,
-      expanded: true,
-      styleClass: 'p-person',
-    };
-    this.recentNodeClicked.node.children.push(node1, node2);
+    //change the content to recent node clicked according to send Email and SMS
+    this.recentNodeClicked.node.label = "Send Email And SMS";
+    this.recentNodeClicked.node.type = "EmailAndSMS";
+    this.pushDefaultNewNode({label: "Send Email"})
+    this.pushDefaultNewNode({label: "Send SMS"})
+    // let node1 = {
+    //   key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
+    //   label: `Double Email `,
+    //   children: [],
+    //   parent: this.recentNodeClicked,
+    //   expanded: true,
+    //   icon: PrimeIcons.PLUS,
+    //   styleClass: 'p-person',
+    // };
+    // let node2 = {
+    //   key: (parseInt(node1.key) + 1).toString(),
+    //   label: `Double Email`,
+    //   children: [],
+    //   parent: this.recentNodeClicked,
+    //   expanded: true,
+    //   styleClass: 'p-person',
+    // };
+    // this.recentNodeClicked.node.children.push(node1, node2);
+    console.log("Inside two operation: ")
+    console.log(this.data1);
     this.selectedNode = undefined;
   }
-  pushDefaultNewNode(stylClass: string) {
+  pushDefaultNewNode({label= "Add New Task", stylClass = 'p-person'}: DefaultNodeParameters) {
     this.recentNodeClicked.node.children.push({
-      key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
-      label: 'Add New Task',
-      styleClass: `${stylClass}`,
+      key: uuidv4(),
+      label: label,
+      type: "default",
+      parent: this.recentNodeClicked.node.key,
+      styleClass: stylClass,
       expanded: true,
       children: [],
+      data:{}
     });
     this.selectedNode = undefined;
   }
