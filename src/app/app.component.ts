@@ -396,8 +396,8 @@ export class AppComponent implements OnInit {
     //change the content to recent node clicked according to send Email and SMS
     this.recentNodeClicked.node.label = "Send Email And SMS";
     this.recentNodeClicked.node.type = "EmailAndSMS";
-    this.pushDefaultNewNode({label: "Send Email"})
-    this.pushDefaultNewNode({label: "Send SMS"})
+    this.pushDefaultNewNode("Send Email")
+    this.pushDefaultNewNode("Send SMS")
     // let node1 = {
     //   key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
     //   label: `Double Email `,
@@ -420,13 +420,13 @@ export class AppComponent implements OnInit {
     console.log(this.data1);
     this.selectedNode = undefined;
   }
-  pushDefaultNewNode(node: {label:"Add New Task", stylClass: string}) {
+  pushDefaultNewNode(label:string = "Add New Task", stylClass:string = 'p-person') {
     this.recentNodeClicked.node.children.push({
       key: uuidv4(),
-      label: node.label,
+      label: label,
       type: "default",
       parent: this.recentNodeClicked.node.key,
-      styleClass: `${node.stylClass}`,
+      styleClass: stylClass,
       expanded: true,
       children: [],
       data:{}
