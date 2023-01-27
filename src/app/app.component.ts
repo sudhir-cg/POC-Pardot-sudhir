@@ -12,6 +12,11 @@ import { PrimeIcons } from 'primeng/api';
 import { ChangeDetectorRef } from '@angular/core';
 import { DbService } from './db.service';
 import { v4 as uuidv4 } from 'uuid';
+
+interface DefaultNodeParameters{
+  label?: string,
+  stylClass?: string
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -130,11 +135,11 @@ export class AppComponent implements OnInit {
     this.flowOfTree.push(firstNode);
 
     //now change the recent node clicked:
-    this.recentNodeClicked.node.label = firstNode.data.campaignName;
-    this.recentNodeClicked.node.type = firstNode.type;
+    this.recentNodeClicked.node.label = this.campaignName;
+    this.recentNodeClicked.node.type = 'campaignNode';
     this.recentNodeClicked.node.data = firstNode.data;
     //add one empty children too.
-    this.pushDefaultNewNode(this.recentNodeClicked.node.styleClass);
+    this.pushDefaultNewNode({stylClass: this.recentNodeClicked.node.styleClass}); //this need to be fixed......
     this.isFirstNode = false;
     // if(value == "email"){
     //   this.isFirstNode=false;
@@ -396,8 +401,8 @@ export class AppComponent implements OnInit {
     //change the content to recent node clicked according to send Email and SMS
     this.recentNodeClicked.node.label = "Send Email And SMS";
     this.recentNodeClicked.node.type = "EmailAndSMS";
-    this.pushDefaultNewNode("Send Email")
-    this.pushDefaultNewNode("Send SMS")
+    this.pushDefaultNewNode({label: "Send Email"})
+    this.pushDefaultNewNode({label: "Send SMS"})
     // let node1 = {
     //   key: (parseInt(this.recentNodeClicked.node.key) + 1).toString(),
     //   label: `Double Email `,
@@ -420,7 +425,7 @@ export class AppComponent implements OnInit {
     console.log(this.data1);
     this.selectedNode = undefined;
   }
-  pushDefaultNewNode(label:string = "Add New Task", stylClass:string = 'p-person') {
+  pushDefaultNewNode({label= "Add New Task", stylClass = 'p-person'}: DefaultNodeParameters) {
     this.recentNodeClicked.node.children.push({
       key: uuidv4(),
       label: label,
