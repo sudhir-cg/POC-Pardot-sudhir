@@ -8,9 +8,19 @@
     // padding-left: 0.9rem;
     border-radius: 0.5rem;
   }
+  .p-twilio {
+    padding: 0.5rem;
+    border: rgb(241, 45, 69) solid 4px;
+    border-radius: 0.5rem;
+  }
+  .p-quiq {
+    padding: 0.5rem;
+    border: rgb(71, 134, 238) solid 4px;
+    border-radius: 0.5rem;
+  }
   .p-endNode {
     padding: 0;
-    border: rgb(173, 58, 58) solid 3px;
+    border: rgb(255, 0, 0) solid 3px;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     padding-right: 0.9rem;
@@ -39,8 +49,20 @@
   }
 
   .node-header {
-    background-color: #495ebb;
-    color: #ffffff;
+    // background-color: #495ebb;
+    // color: #ffffff;
+
+    height: 3rem;
+    background-size: auto;
+    background: url("https://icons.iconarchive.com/icons/custom-icon-design/flatastic-1/24/add-icon.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: 3px solid rgb(37, 192, 71);
+    border-radius: 50%;
+    width: 3rem;
+    position: absolute;
+    top: -55%;
+    left: 13%;
   }
   .company {
     border-radius: 10px;
@@ -96,4 +118,92 @@
 }
 .p-datepicker {
   top: 0 important;
+}
+
+// slide menu
+:host ::ng-deep .p-slidemenu {
+  font-weight: bold;
+
+  .pi:before {
+    color: rgba(253, 183, 28, 1);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    background-color: rgb(252, 228, 177);
+    border-radius: 50%;
+  }
+  .p-menuitem-link .p-menuitem-text {
+    padding-left: 1rem;
+  }
+
+  .pi-caret-left:before {
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background-color: transparent;
+  }
+  .pi-external-link:before {
+    content: "Q";
+    // background-image: url(../assets/twilio.png);
+    // background-size: auto;
+
+    // position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .pi-play:before {
+    content: "T";
+  }
+}
+:host ::ng-deep .p-slidemenu .p-menuitem-link:hover {
+  background-color: rgba(253, 183, 28, 1);
+  color: whitesmoke;
+  .p-menuitem-text {
+    color: whitesmoke !important;
+  }
+  .pi-caret-left:before {
+    padding: 0 !important;
+    color: whitesmoke;
+    border-radius: 0 !important;
+    background-color: transparent;
+  }
+}
+
+//dialog
+:host ::ng-deep .p-dialog {
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #e4e4e4;
+    border-radius: 50px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(255, 213, 121);
+    border-radius: 50px;
+  }
+  border-radius: 1rem;
+  .p-dialog-header {
+    background-color: rgba(253, 183, 28, 1);
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+  .p-dialog-footer {
+    padding-top: 0.5rem;
+    text-align: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  .p-dialog-footer button {
+    font-weight: bold;
+  }
+  .p-dialog-footer button:hover {
+    color: whitesmoke !important;
+    background-color: rgba(253, 183, 28, 1) !important;
+  }
+  .p-dialog-content {
+    padding-top: 0.5rem;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
 }
